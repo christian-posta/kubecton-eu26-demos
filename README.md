@@ -42,7 +42,10 @@ Can check what it has:
 npx @modelcontextprotocol/inspector --cli https://servereverything.dev/mcp --transport http --method tools/list
 ```
 
-3. We can explore the UI a little, show how we can generate k8s resources to deploy agentgateway
+3. We can explore the UI a little, add servereverything to the registry. 
+
+show how we can generate k8s resources to deploy agentgateway
+
 
 4. From the CLI we can search for the servereverything:
 
