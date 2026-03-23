@@ -3,6 +3,8 @@
 # Assumes AgentRegistry is running; you register Server Everything in the UI when prompted,
 # and you have arctl, kubectl, pv, npx, etc. See README.md § Demo 1.
 # Loads .env and kubectl port-forward silently (no typed command); failures still print.
+# Gateway MCP/curl use AGENTGATEWAY_SSO_PUBLIC_BASE_URL from .env (e.g. ngrok HTTPS) when set;
+# otherwise http://127.0.0.1:$PORT_FORWARD_LOCAL. Run ngrok → that port to match.
 #
 # Optional: DEMO_RUN_FAST=1, DEMO_AUTO_RUN=1 (same as util.sh).
 # Override: AGW_NAMESPACE, AGW_SERVICE, PORT_FORWARD_LOCAL, PORT_FORWARD_REMOTE.
@@ -25,7 +27,10 @@ PF_LOCAL="${PORT_FORWARD_LOCAL:-3000}"
 PF_REMOTE="${PORT_FORWARD_REMOTE:-8080}"
 SERVER_EVERYTHING_SITE="https://servereverything.dev"
 UPSTREAM_MCP_URL="${SERVER_EVERYTHING_SITE}/mcp"
-LOCAL_MCP_URL="http://127.0.0.1:${PF_LOCAL}/server/mcp"
+
+GATEWAY_PUBLIC_BASE="${AGENTGATEWAY_SSO_PUBLIC_BASE_URL:-http://127.0.0.1:${PF_LOCAL}}"
+GATEWAY_PUBLIC_BASE="${GATEWAY_PUBLIC_BASE%/}"
+GATEWAY_MCP_URL="${GATEWAY_PUBLIC_BASE}/server/mcp"
 
 PF_PID=""
 PF_LOG=""
@@ -138,10 +143,10 @@ if ! start_agentgateway_port_forward; then
     exit 1
 fi
 
-banner "Call the MCP through the gateway via local port-forward"
+banner "Call the MCP through the gateway (public URL from .env when set, e.g. ngrok → port ${PF_LOCAL})"
 
-desc "Inspector against the gateway path published by arctl (HTTP on localhost)"
-run "npx @modelcontextprotocol/inspector --cli ${LOCAL_MCP_URL} --transport http --method tools/list"
+desc "Inspector against the gateway MCP URL (HTTPS if using ngrok / AGENTGATEWAY_SSO_PUBLIC_BASE_URL)"
+run "npx @modelcontextprotocol/inspector --cli ${GATEWAY_MCP_URL} --transport http --method tools/list"
 
 demo_top
 
