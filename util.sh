@@ -28,6 +28,12 @@ function backtotop() {
     clear
 }
 
+# Clear the terminal and reset pacing prompt state (after noisy output, e.g. npx inspector).
+function demo_top() {
+    backtotop
+    started=""
+}
+
 function run() {
     maybe_first_prompt
     rate=25

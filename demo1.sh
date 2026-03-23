@@ -97,10 +97,14 @@ start_agentgateway_port_forward() {
     return 1
 }
 
+demo_top
+
 banner "Demo 1 — Registry / MCP onboarding (UI at http://localhost:12121)"
 
 desc "Call the upstream Server Everything MCP — same URL you will add in the registry UI"
 run "npx @modelcontextprotocol/inspector --cli ${UPSTREAM_MCP_URL} --transport http --method tools/list"
+
+demo_top
 
 desc "Heads-up: open the registry UI and register ${UPSTREAM_MCP_URL} as streamable-http — press Enter when done."
 if [ -z "${DEMO_AUTO_RUN:-}" ]; then
@@ -130,6 +134,8 @@ banner "Call the MCP through the gateway via local port-forward"
 
 desc "Inspector against the gateway path published by arctl (HTTP on localhost)"
 run "npx @modelcontextprotocol/inspector --cli ${LOCAL_MCP_URL} --transport http --method tools/list"
+
+demo_top
 
 desc "Done. Exiting stops the background port-forward."
 if [ -z "${DEMO_AUTO_RUN:-}" ]; then
