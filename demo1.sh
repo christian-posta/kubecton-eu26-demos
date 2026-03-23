@@ -23,7 +23,8 @@ AGW_NS="${AGW_NAMESPACE:-agentgateway-system}"
 AGW_SVC="${AGW_SERVICE:-agentgateway}"
 PF_LOCAL="${PORT_FORWARD_LOCAL:-3000}"
 PF_REMOTE="${PORT_FORWARD_REMOTE:-8080}"
-UPSTREAM_MCP_URL="https://servereverything.dev/mcp"
+SERVER_EVERYTHING_SITE="https://servereverything.dev"
+UPSTREAM_MCP_URL="${SERVER_EVERYTHING_SITE}/mcp"
 LOCAL_MCP_URL="http://127.0.0.1:${PF_LOCAL}/server/mcp"
 
 PF_PID=""
@@ -101,7 +102,14 @@ demo_top
 
 banner "Demo 1 — Registry / MCP onboarding (UI at http://localhost:12121)"
 
-desc "Call the upstream Server Everything MCP — same URL you will add in the registry UI"
+desc "For this demo we use the Server Everything MCP server (streamable HTTP over HTTPS)."
+desc "${SERVER_EVERYTHING_SITE}"
+
+desc "Press Enter to continue — next we call the MCP endpoint you will register in the UI."
+if [ -z "${DEMO_AUTO_RUN:-}" ]; then
+    read -r
+fi
+
 run "npx @modelcontextprotocol/inspector --cli ${UPSTREAM_MCP_URL} --transport http --method tools/list"
 
 demo_top
