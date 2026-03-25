@@ -1,0 +1,62 @@
+---
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: dev-servereverything-server-policy
+  namespace: agentgateway-system
+spec:
+  backend:
+    mcp:
+      authorization:
+        action: Allow
+        policy:
+          matchExpressions:
+            - "mcp.tool.name == 'echo'"
+            - "mcp.tool.name == 'get-tiny-image'"
+            - "mcp.tool.name == 'get-sum'"
+      authentication:
+        audiences:
+        - https://ceposta-agw.ngrok.io/mcp
+        issuer: https://ceposta-solo.auth0.com/
+        jwks:
+          backendRef:
+            group: agentgateway.dev
+            kind: AgentgatewayBackend
+            name: dev-servereverything-server-jwks
+          jwksPath: .well-known/jwks.json
+        mode: Strict
+        provider: Auth0
+        resourceMetadata:
+          authorizationServers:
+          - https://ceposta-agw.ngrok.io/server/mcp
+          bearerMethodsSupported:
+          - header
+          - body
+          - query
+          resource: https://ceposta-agw.ngrok.io/server/mcp
+          resourceDocumentation: https://ceposta-agw.ngrok.io/server/mcp/docs
+          resourcePolicyUri: https://ceposta-agw.ngrok.io/server/mcp/policies
+          scopesSupported:
+          - profile
+          - openid
+          - offline_access
+    tls: {}
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: dev-servereverything-server
+  traffic:
+    cors:
+      allowCredentials: false
+      allowHeaders:
+      - '*'
+      allowMethods:
+      - '*'
+      allowOrigins:
+      - '*'
+    headerModifiers:
+      request:
+        remove:
+        - x-forwarded-for
+        - x-forwarded-host
+        - x-forwarded-proto

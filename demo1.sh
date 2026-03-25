@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Demo 1: AI Agent Registry / MCP onboarding — paced walkthrough (Kubecon EU 2026).
 # Assumes AgentRegistry is running; you register Server Everything in the UI when prompted,
-# and you have arctl, kubectl, pv, npx, etc. See README.md § Demo 1.
+# and you have arctl, kubectl, pv, npx, jq, etc. See README.md § Demo 1.
 # Loads .env and kubectl port-forward silently (no typed command); failures still print.
 # Gateway MCP/curl use AGENTGATEWAY_SSO_PUBLIC_BASE_URL from .env (e.g. ngrok HTTPS) when set;
 # otherwise http://127.0.0.1:$PORT_FORWARD_LOCAL. Run ngrok → that port to match.
@@ -115,7 +115,7 @@ if [ -z "${DEMO_AUTO_RUN:-}" ]; then
     read -r
 fi
 
-run "npx @modelcontextprotocol/inspector --cli ${UPSTREAM_MCP_URL} --transport http --method tools/list"
+run "npx @modelcontextprotocol/inspector --cli ${UPSTREAM_MCP_URL} --transport http --method tools/list | jq -r '(.result.tools // .tools // [])[] | [.name, (.description // \"\")] | @tsv'"
 
 demo_top
 
@@ -146,7 +146,7 @@ fi
 banner "Call the MCP through the gateway (public URL from .env when set, e.g. ngrok → port ${PF_LOCAL})"
 
 desc "Inspector against the gateway MCP URL (HTTPS if using ngrok / AGENTGATEWAY_SSO_PUBLIC_BASE_URL)"
-run "npx @modelcontextprotocol/inspector --cli ${GATEWAY_MCP_URL} --transport http --method tools/list"
+run "npx @modelcontextprotocol/inspector --cli ${GATEWAY_MCP_URL} --transport http --method tools/list | jq -r '(.result.tools // .tools // [])[] | [.name, (.description // \"\")] | @tsv'"
 
 demo_top
 

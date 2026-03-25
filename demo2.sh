@@ -151,16 +151,10 @@ demo_top
 desc "401 from your gateway — check WWW-Authenticate and resource_metadata"
 run "curl -I ${GATEWAY_PUBLIC_BASE}/server/mcp"
 
-desc "Protected resource metadata for your MCP route"
-run "curl -s ${GATEWAY_PUBLIC_BASE}/.well-known/oauth-protected-resource/server/mcp | jq"
-
-desc "Authorization server metadata (enterprise IdP / Auth0 integration)"
-run "curl -s ${GATEWAY_PUBLIC_BASE}/.well-known/oauth-authorization-server/server/mcp | jq"
-
-banner "Next: complete OAuth in VS Code (or your client) using this metadata — README Demo 2 closing note"
+banner "Next: complete OAuth in VS Code or MCP Insepctor using this metadata — README Demo 2 closing note"
 
 desc "Done. Port-forward stops on exit. Optional cleanup is in README (kubectl delete / arctl mcp delete / VS Code credentials)."
-desc "Go to mcp-inspector UI and try to connect!"
+desc "Go to mcp-inspector UI and try to connect with client id F7LkCRyHuobrBLSiOtnk3LwH7o8eRP8l"
 if [ -z "${DEMO_AUTO_RUN:-}" ]; then
     read -s -r -n 1
 fi

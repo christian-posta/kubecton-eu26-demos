@@ -318,7 +318,11 @@ curl -s https://ceposta-agw.ngrok.io/.well-known/oauth-authorization-server/serv
 
 Now we are connected over Enterprise SSO (Auth0!)
 
-From here we can try to connect from VS code. 
+From here we can try to connect from VS code. Or MCP Insepctor:
+
+For MCP inspector, use this client:
+
+F7LkCRyHuobrBLSiOtnk3LwH7o8eRP8l
 
 
 ## Cleanup
